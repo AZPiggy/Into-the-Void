@@ -75,6 +75,10 @@ Attributions:
 	FREE Casual Game SFX Pack by Dustyroom
 	https://assetstore.unity.com/packages/audio/sound-fx/free-casual-game-sfx-pack-54116
 
+	https://freesound.org/people/Mrthenoronha/sounds/476546/
+
 - Button Sprites
+
+- Player Controller Code
 
 

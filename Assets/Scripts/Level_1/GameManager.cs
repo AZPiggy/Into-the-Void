@@ -14,21 +14,33 @@ public class GameManager : MonoBehaviour
     public int livesRemaining = 0;
     private int LIVES_AT_START = 3;
 
+    /*
     public GameObject enemiesPrefab;
     private GameObject currentEnemies;
 
     public GameObject playerPrefab;
+    */
+
     private GameObject currentPlayer;
 
+    /*
     public GameObject coinsPrefab;
     private GameObject currentCoins;
 
     public GameObject platformPrefab;
     private GameObject currentPlatforms;
+    */
 
+    // New UI
     public TextMeshProUGUI messageOverlay;
     public TextMeshProUGUI Score;
     public TextMeshProUGUI Life;
+
+    [Header("UI Panels")]
+    public GameObject startMenuPanel;
+    public GameObject gameOverPanel;
+    public GameObject levelCompletePanel;
+
 
     public TextMeshProUGUI countdownText;
     public float levelDuration = 180f;
@@ -39,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     // game camera
     public SmoothCameraFollow cameraScript;
+
 
     private void Awake()
     {
@@ -52,19 +65,29 @@ public class GameManager : MonoBehaviour
             // Keep score and lives
             DontDestroyOnLoad(this.gameObject);
         }
+
+        currentState = GameState.StartMenu;
+
+        startMenuPanel.SetActive(true);
+        gameOverPanel.SetActive(false);
+        levelCompletePanel.SetActive(false);
+
+        Score.enabled = false;
+        Life.enabled = false;
+        countdownText.enabled = false;
+
+        StartNewGame();
+
     }
 
     void Start()
     {
-        currentState = GameState.StartMenu;
-        messageOverlay.text = "Forest Adventure\n\nPress \"S\" to Start";
-        Score.enabled = false;
-        Life.enabled = false;
-        countdownText.enabled = false;
+  
     }
 
     void Update()
     {
+        /*
         if (currentState == GameState.StartMenu)
         {
             if (Input.GetKeyDown(KeyCode.S))
@@ -72,13 +95,7 @@ public class GameManager : MonoBehaviour
                 StartNewGame();
             }
         }
-        else if (currentState == GameState.GameOver)
-        {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                RestartGame();
-            }
-        }
+        */
         // set timer
         if (currentState == GameState.Playing && timerRunning)
         {
@@ -97,7 +114,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void RestartGame()
+    public void RestartGame()
     {
         messageOverlay.enabled = false;
         countdownText.enabled = false;
@@ -109,6 +126,11 @@ public class GameManager : MonoBehaviour
         score = 0;
         livesRemaining = LIVES_AT_START;
 
+        startMenuPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+        levelCompletePanel.SetActive(false);
+
+        /*
         if (currentEnemies)
         {
             Destroy(currentEnemies);
@@ -120,18 +142,27 @@ public class GameManager : MonoBehaviour
             Destroy(currentPlayer);
         }
         currentPlayer = Instantiate(playerPrefab);
+        */
 
         // link camera to new player
+        cameraScript = FindFirstObjectByType<SmoothCameraFollow>();
+
         if (cameraScript != null)
         {
-            cameraScript.playerObject = currentPlayer;
+            currentPlayer = LevelManager.level.currentPlayer;
 
-            // force camera to snap to player X
-            Vector3 camPos = cameraScript.transform.position;
-            camPos.x = currentPlayer.transform.position.x;
-            cameraScript.transform.position = camPos;
+            if (currentPlayer)
+            {
+                cameraScript.playerObject = currentPlayer;
+
+                // force camera to snap to player X
+                Vector3 camPos = cameraScript.transform.position;
+                camPos.x = currentPlayer.transform.position.x;
+                cameraScript.transform.position = camPos;
+            }
         }
 
+        /*
         if (currentCoins)
         {
             Destroy(currentCoins);
@@ -143,6 +174,7 @@ public class GameManager : MonoBehaviour
             Destroy(currentPlatforms);
         }
         currentPlatforms = Instantiate(platformPrefab);
+        */
 
         StartCoroutine(GetReady());
     }
@@ -152,8 +184,15 @@ public class GameManager : MonoBehaviour
     {
         currentState = GameState.GetReady;
 
-        SoundManager.S.startTheMusic();
+        // Reassociate new player object
+        currentPlayer = LevelManager.level.currentPlayer;
 
+        if (SoundManager.S)
+        {
+            SoundManager.S.startTheMusic();
+        }
+
+        startMenuPanel.SetActive(true);
         messageOverlay.text = "Get Ready!";
         messageOverlay.enabled = true;
 
@@ -172,6 +211,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         messageOverlay.enabled = false;
+        startMenuPanel.SetActive(false);
 
         StartRound();
     }
@@ -251,14 +291,11 @@ public class GameManager : MonoBehaviour
         timerRunning = false;
         countdownText.enabled = false;
 
-        messageOverlay.text = "You lose :(\n\nPress \"R\" to Restart";
-        messageOverlay.enabled = true;
+        gameOverPanel.SetActive(true);
+
 
         SoundManager.S.stopTheMusic();
         SoundManager.S.PlayLoseSound();
-
-        // TODO: wait and then restart level
-        // LevelManager.level.LevelEvent_RESTART_LEVEL();
     }
 
     public IEnumerator CompleteLevel()
@@ -273,8 +310,6 @@ public class GameManager : MonoBehaviour
         SoundManager.S.PlayVictorySound();
 
         // UI
-        messageOverlay.text = "Level Complete! Get Ready for next!";
-        messageOverlay.enabled = true;
         UpdateUI();
 
         Animator playerAnim = currentPlayer.GetComponentInChildren<Animator>();
@@ -284,9 +319,10 @@ public class GameManager : MonoBehaviour
             playerAnim.enabled = false;
         }
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
 
-        LevelManager.level.LevelEvent_END_OF_LEVEL();
+        // LevelManager.level.LevelEvent_END_OF_LEVEL();
+        levelCompletePanel.SetActive(true);
 
     }
 }

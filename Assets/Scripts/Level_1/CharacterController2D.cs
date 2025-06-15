@@ -24,6 +24,7 @@ public class CharacterController2D : MonoBehaviour
 
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction attackAction;
 
     Rigidbody2D r2d;
 
@@ -31,6 +32,10 @@ public class CharacterController2D : MonoBehaviour
     public Vector3 groundCheckOffset;
     public float groundCheckRadius;
     public LayerMask groundLayerMask;
+
+    // melee attack variables
+    public Transform meleeHitBoxObject;
+    public LayerMask meleeHitMask;
 
     // falling off the edge death
     public float deathYThreshold = -10f;
@@ -42,6 +47,9 @@ public class CharacterController2D : MonoBehaviour
     private SpriteRenderer sprite;
     private Color originalColor;
 
+    // flip hitbox
+    private Vector3 rightFacingOffset;
+    private Vector3 leftFacingOffset;
 
     // Use this for initialization
     void Start()
@@ -56,11 +64,16 @@ public class CharacterController2D : MonoBehaviour
 
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
+        attackAction = InputSystem.actions.FindAction("Attack");
 
         // initialize the animator
         anim = GetComponentInChildren<Animator>();
 
         originalColor = sprite.color;
+
+        // save initial positions
+        rightFacingOffset = meleeHitBoxObject.localPosition;
+        leftFacingOffset = new Vector3(-rightFacingOffset.x, rightFacingOffset.y, rightFacingOffset.z);
     }
 
     // Update is called once per frame
@@ -92,6 +105,13 @@ public class CharacterController2D : MonoBehaviour
             // Debug.Log("is jumping false");
         }
 
+        // ATTACK!
+        if (attackAction.WasPressedThisFrame())
+        {
+            anim.SetTrigger("PlayerAttack");
+            SoundManager.S.PlayAttackSound();
+        }
+
         if (transform.position.y <= deathYThreshold)
         {
             SoundManager.S.PlayPlayerDestroySound();
@@ -101,10 +121,12 @@ public class CharacterController2D : MonoBehaviour
         if (moveDirection > 0f)
         {
             sprite.flipX = false; // face right
+            meleeHitBoxObject.localPosition = rightFacingOffset;
         }
         else if (moveDirection < 0f)
         {
             sprite.flipX = true; // face left
+            meleeHitBoxObject.localPosition = leftFacingOffset;
         }
 
     }
@@ -129,6 +151,29 @@ public class CharacterController2D : MonoBehaviour
         
     }
 
+    private void MeleeAttack()
+    {
+        // make sure we are not dead
+        if (!isDead)
+        {
+            // check for enemy objects (any collider)
+            Collider2D thisCollider = Physics2D.OverlapBox(meleeHitBoxObject.position, meleeHitBoxObject.localScale, 0f, meleeHitMask);
+            if (thisCollider)
+            {
+                BoarEnemy boarEnemy = thisCollider.GetComponent<BoarEnemy>();
+                BeeEnemy beeEnemy = thisCollider.GetComponent<BeeEnemy>();
+                if (boarEnemy)
+                {
+                    boarEnemy.BoarEnemyDie();
+                }
+                else if (beeEnemy)
+                {
+                    beeEnemy.BeeEnemyDie();
+                }
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
         // show the grounded radius
@@ -143,6 +188,9 @@ public class CharacterController2D : MonoBehaviour
         // draw the circle for the ground check
         Gizmos.DrawWireSphere(transform.position + groundCheckOffset, groundCheckRadius);
 
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawCube(meleeHitBoxObject.position, meleeHitBoxObject.localScale);
+
     }
 
     public void PlayDeathAnimation()
@@ -155,6 +203,7 @@ public class CharacterController2D : MonoBehaviour
 
         // freeze movement, but keep gravity
         r2d.linearVelocity = Vector2.zero;
+        r2d.bodyType = RigidbodyType2D.Kinematic;
     }
 
     public void FlashRed()

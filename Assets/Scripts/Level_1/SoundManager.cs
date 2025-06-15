@@ -22,9 +22,11 @@ public class SoundManager : MonoBehaviour
 
     [Header("Coin Sound")]
     public AudioSource coinSoundObject;
+    public AudioClip lifeBonusSound;
 
     [Header("Player Actions")]
     public AudioClip jumpClip;
+    public AudioClip attackClip;
 
 
     // Singleton Variable
@@ -57,8 +59,11 @@ public class SoundManager : MonoBehaviour
 
     public void startTheMusic()
     {
-        backgroundMusic.time = bgmStartTime;
-        backgroundMusic.Play();
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.time = bgmStartTime;
+            backgroundMusic.Play();
+        }
     }
 
     public void stopTheMusic()
@@ -94,6 +99,16 @@ public class SoundManager : MonoBehaviour
     public void PlayJumpSound()
     {
         soundEffects.PlayOneShot(jumpClip);
+    }
+
+    public void PlayAttackSound()
+    {
+        soundEffects.PlayOneShot(attackClip);
+    }
+
+    public void PlayLifeBonusSound()
+    {
+        coinSoundObject.PlayOneShot(lifeBonusSound);
     }
 
 }

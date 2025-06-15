@@ -19,6 +19,7 @@ public class CharacterControllerTutorial : MonoBehaviour
 
     InputAction moveAction;
     InputAction jumpAction;
+    InputAction attackAction;
 
     Rigidbody2D r2d;
 
@@ -27,10 +28,19 @@ public class CharacterControllerTutorial : MonoBehaviour
     public float groundCheckRadius;
     public LayerMask groundLayerMask;
 
+    // melee attack variables
+    public Transform meleeHitBoxObject;
+    public LayerMask meleeHitMask;
+
     // animation
     private Animator anim;
 
     private SpriteRenderer sprite;
+
+    // flip hitbox
+    private Vector3 rightFacingOffset;
+    private Vector3 leftFacingOffset;
+
 
     // Use this for initialization
     void Start()
@@ -45,9 +55,15 @@ public class CharacterControllerTutorial : MonoBehaviour
 
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
+        attackAction = InputSystem.actions.FindAction("Attack");
 
         // initialize the animator
         anim = GetComponentInChildren<Animator>();
+
+        // save initial positions
+        rightFacingOffset = meleeHitBoxObject.localPosition;
+        leftFacingOffset = new Vector3(-rightFacingOffset.x, rightFacingOffset.y, rightFacingOffset.z);
+
     }
 
     // Update is called once per frame
@@ -62,9 +78,8 @@ public class CharacterControllerTutorial : MonoBehaviour
         {
 
             r2d.linearVelocity = new Vector2(r2d.linearVelocity.x, jumpHeight);
-            Debug.Log("Entered here?");
             SoundManager.S.PlayJumpSound();
-            Debug.Log("Ready to set bool?");
+            // Debug.Log("Ready to set bool?");
             anim.SetBool("IsJumping", true);
             // set grounded to false since already jumping
             isGrounded = false;
@@ -75,13 +90,24 @@ public class CharacterControllerTutorial : MonoBehaviour
             anim.SetBool("IsJumping", false);
         }
 
+        // ATTACK!
+        if (attackAction.WasPressedThisFrame())
+        {
+            anim.SetTrigger("PlayerAttack");
+            // Debug.Log("attack sound should play");
+            SoundManager.S.PlayAttackSound();
+            // MeleeAttack();
+        }
+
         if (moveDirection > 0f)
         {
             sprite.flipX = false; // face right
+            meleeHitBoxObject.localPosition = rightFacingOffset;
         }
         else if (moveDirection < 0f)
         {
             sprite.flipX = true; // face left
+            meleeHitBoxObject.localPosition = leftFacingOffset;
         }
 
     }
@@ -117,6 +143,21 @@ public class CharacterControllerTutorial : MonoBehaviour
         // draw the circle for the ground check
         Gizmos.DrawWireSphere(transform.position + groundCheckOffset, groundCheckRadius);
 
+    }
+
+    private void MeleeAttack()
+    {
+        // check for enemy objects (any collider)
+        Collider2D thisCollider = Physics2D.OverlapBox(meleeHitBoxObject.position, meleeHitBoxObject.localScale, 0f, meleeHitMask);
+        if (thisCollider)
+        {
+            BoarTutorialScript boarEnemy = thisCollider.GetComponent<BoarTutorialScript>();
+            if (boarEnemy)
+            {
+                boarEnemy.EnemyDie();
+            }
+        }
+        // else { Debug.Log("Whiff"); }
     }
 
 }
