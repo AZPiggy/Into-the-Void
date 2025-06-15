@@ -14,22 +14,7 @@ public class GameManager : MonoBehaviour
     public int livesRemaining = 0;
     private int LIVES_AT_START = 3;
 
-    /*
-    public GameObject enemiesPrefab;
-    private GameObject currentEnemies;
-
-    public GameObject playerPrefab;
-    */
-
     private GameObject currentPlayer;
-
-    /*
-    public GameObject coinsPrefab;
-    private GameObject currentCoins;
-
-    public GameObject platformPrefab;
-    private GameObject currentPlatforms;
-    */
 
     // New UI
     public TextMeshProUGUI messageOverlay;
@@ -87,23 +72,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        /*
-        if (currentState == GameState.StartMenu)
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                StartNewGame();
-            }
-        }
-        */
         // set timer
         if (currentState == GameState.Playing && timerRunning)
         {
             remainingTime -= Time.deltaTime;
+            Debug.Log(remainingTime.ToString());
             // clamp remaining time
             remainingTime = Mathf.Max(remainingTime, 0f);
 
             int seconds = Mathf.FloorToInt(remainingTime);
+            Debug.Log("Count Down Text enabled");
             countdownText.text = seconds + "s";
 
             if (remainingTime <= 0f)
@@ -130,19 +108,6 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         levelCompletePanel.SetActive(false);
 
-        /*
-        if (currentEnemies)
-        {
-            Destroy(currentEnemies);
-        }
-        currentEnemies = Instantiate(enemiesPrefab);
-
-        if (currentPlayer)
-        {
-            Destroy(currentPlayer);
-        }
-        currentPlayer = Instantiate(playerPrefab);
-        */
 
         // link camera to new player
         cameraScript = FindFirstObjectByType<SmoothCameraFollow>();
@@ -161,20 +126,6 @@ public class GameManager : MonoBehaviour
                 cameraScript.transform.position = camPos;
             }
         }
-
-        /*
-        if (currentCoins)
-        {
-            Destroy(currentCoins);
-        }
-        currentCoins = Instantiate(coinsPrefab);
-
-        if (currentPlatforms)
-        {
-            Destroy(currentPlatforms);
-        }
-        currentPlatforms = Instantiate(platformPrefab);
-        */
 
         StartCoroutine(GetReady());
     }

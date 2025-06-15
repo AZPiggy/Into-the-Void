@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3fdf2eb70d7779e4f869438e240aba0a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 163493
+  packageName: Platformer Fantasy SET4
+  packageVersion: 1.0
+  assetPath: Assets/PF_SET4/Sliced/Animated/anim_water2_0.controller
+  uploadId: 354089
