@@ -59,7 +59,10 @@ Attributions:
 	Legacy Fantasy Bundle by Anokolisa
 	https://anokolisa.itch.io/sidescroller-pixelart-sprites-asset-pack-forest-16x16
 
-- "Coin" Asset from:
+	Sunny Land by Ansimuz
+	https://assetstore.unity.com/packages/2d/characters/sunny-land-103349
+
+- "Coin" and "LifeBonus" Asset from:
 
 	Pixel Art Character Package by GDD-Quinnipiac
 	https://assetstore.unity.com/packages/2d/characters/pixel-art-character-package-312497
@@ -76,6 +79,10 @@ Attributions:
 	https://assetstore.unity.com/packages/audio/sound-fx/free-casual-game-sfx-pack-54116
 
 	https://freesound.org/people/Mrthenoronha/sounds/476546/
+
+	https://assetstore.unity.com/packages/audio/music/arcade-game-bgm-17-210775
+
+	https://assetstore.unity.com/packages/audio/music/8-bit-rpg-adventure-and-fantasy-music-pack-pixel-adventures-vol--321759
 
 - Button Sprites
 
