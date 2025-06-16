@@ -29,8 +29,8 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI countdownText;
     public float levelDuration = 180f;
-    private float remainingTime;
-    private bool timerRunning = false;
+    public float remainingTime;
+    public bool timerRunning = false;
 
     public static GameManager game;
 
@@ -51,6 +51,10 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
 
+    }
+
+    void Start()
+    {
         currentState = GameState.StartMenu;
 
         startMenuPanel.SetActive(true);
@@ -65,23 +69,19 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void Start()
-    {
-  
-    }
-
     void Update()
     {
+        // Debug.Log("Entered?");
         // set timer
-        if (currentState == GameState.Playing && timerRunning)
+        if ((currentState == GameState.Playing) && timerRunning)
         {
             remainingTime -= Time.deltaTime;
-            Debug.Log(remainingTime.ToString());
+            // Debug.Log(remainingTime.ToString());
             // clamp remaining time
             remainingTime = Mathf.Max(remainingTime, 0f);
 
             int seconds = Mathf.FloorToInt(remainingTime);
-            Debug.Log("Count Down Text enabled");
+            // Debug.Log("Count Down Text enabled");
             countdownText.text = seconds + "s";
 
             if (remainingTime <= 0f)
@@ -114,6 +114,7 @@ public class GameManager : MonoBehaviour
 
         if (cameraScript != null)
         {
+            Debug.Log("Camera is there!");
             currentPlayer = LevelManager.level.currentPlayer;
 
             if (currentPlayer)

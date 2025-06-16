@@ -17,7 +17,7 @@ public class BeeEnemy : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         col = GetComponent<Collider2D>();
-        sprite.flipX = !faceLeft;
+        // sprite.flipX = !faceLeft;
     }
 
     void FixedUpdate()
@@ -29,7 +29,7 @@ public class BeeEnemy : MonoBehaviour
     public void FlipDirection()
     {
         faceLeft = !faceLeft;
-        sprite.flipX = faceLeft ? false : true;
+        sprite.flipX = faceLeft ? true : false;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
