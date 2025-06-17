@@ -155,7 +155,7 @@ MonoBehaviour:
   - "Use (\u2190 and \u2192) or (A and D) to move."
   - Use space bar to jump.
   - Press right mouse button to attack!
-  - "Collect \"coins\u201C along the way to increase score!"
+  - Collect "coins" along the way to increase score!
   - Go ahead and try it :)
   displayTime: 3
   playgroundObjects: {fileID: 432489453}
