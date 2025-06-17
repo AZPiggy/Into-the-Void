@@ -162,6 +162,8 @@ public class CharacterController2D : MonoBehaviour
             {
                 BoarEnemy boarEnemy = thisCollider.GetComponent<BoarEnemy>();
                 BeeEnemy beeEnemy = thisCollider.GetComponent<BeeEnemy>();
+                BearEnemy bearEnemy = thisCollider.GetComponent<BearEnemy>();
+                BatEnemy batEnemy = thisCollider.GetComponent<BatEnemy>();
                 if (boarEnemy)
                 {
                     boarEnemy.BoarEnemyDie();
@@ -169,6 +171,14 @@ public class CharacterController2D : MonoBehaviour
                 else if (beeEnemy)
                 {
                     beeEnemy.BeeEnemyDie();
+                }
+                else if (bearEnemy)
+                {
+                    bearEnemy.BearEnemyDie();
+                }
+                else if (batEnemy)
+                {
+                    batEnemy.BatEnemyDie();
                 }
             }
         }

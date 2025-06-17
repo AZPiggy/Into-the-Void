@@ -29,7 +29,7 @@ public class BeeEnemy : MonoBehaviour
     public void FlipDirection()
     {
         faceLeft = !faceLeft;
-        sprite.flipX = faceLeft ? true : false;
+        sprite.flipX = faceLeft ? false : true;
     }
 
     void OnCollisionEnter2D(Collision2D collision)

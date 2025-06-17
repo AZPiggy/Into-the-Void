@@ -62,7 +62,9 @@ Attributions:
 	Sunny Land by Ansimuz
 	https://assetstore.unity.com/packages/2d/characters/sunny-land-103349
 
-- "Coin" and "LifeBonus" Asset from:
+	Cainos (my assets)
+
+- "Coin", "LifeBonus" and one enemy assets from:
 
 	Pixel Art Character Package by GDD-Quinnipiac
 	https://assetstore.unity.com/packages/2d/characters/pixel-art-character-package-312497
