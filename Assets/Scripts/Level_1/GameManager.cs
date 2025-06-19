@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public int livesRemaining = 0;
     private int LIVES_AT_START = 3;
 
-    private GameObject currentPlayer;
+    public GameObject currentPlayer;
 
     // New UI
     public TextMeshProUGUI messageOverlay;
@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
     public GameObject startMenuPanel;
     public GameObject gameOverPanel;
     public GameObject levelCompletePanel;
-    public GameObject finalWinPanel;
 
 
     public TextMeshProUGUI countdownText;
@@ -61,7 +60,6 @@ public class GameManager : MonoBehaviour
         startMenuPanel.SetActive(true);
         gameOverPanel.SetActive(false);
         levelCompletePanel.SetActive(false);
-        finalWinPanel.SetActive(false);
 
         Score.enabled = false;
         Life.enabled = false;
@@ -109,8 +107,6 @@ public class GameManager : MonoBehaviour
         startMenuPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         levelCompletePanel.SetActive(false);
-        finalWinPanel.SetActive(false);
-
 
         // link camera to new player
         cameraScript = FindFirstObjectByType<SmoothCameraFollow>();
@@ -278,34 +274,6 @@ public class GameManager : MonoBehaviour
 
         // LevelManager.level.LevelEvent_END_OF_LEVEL();
         levelCompletePanel.SetActive(true);
-
-    }
-
-    public IEnumerator CompleteGame()
-    {
-        currentState = GameState.GameOver;
-        // stop timer
-        timerRunning = false;
-        countdownText.enabled = false;
-
-        // stop music and freeze player
-        SoundManager.S.stopTheMusic();
-        SoundManager.S.PlayVictorySound();
-
-        // UI
-        UpdateUI();
-
-        Animator playerAnim = currentPlayer.GetComponentInChildren<Animator>();
-        if (playerAnim != null)
-        {
-            // disable animation
-            playerAnim.enabled = false;
-        }
-
-        yield return new WaitForSeconds(1f);
-
-        // LevelManager.level.LevelEvent_END_OF_LEVEL();
-        finalWinPanel.SetActive(true);
 
     }
 }
